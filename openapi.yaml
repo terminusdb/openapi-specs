@@ -601,6 +601,8 @@ paths:
             application/json:
               schema:
                 type: object
+                example: { "name" : { "@op" : "ValueSwap", "@before" : "Jane", "@after": "Janine" }}
+
         404:
           description: "Failed to find diff"
 
@@ -634,6 +636,7 @@ paths:
             application/json:
               schema:
                 type: object
+                example: { "@id" : "Person/Jane", "@type" : "Person", "name" : "Jannet"}
 
 components:
 
