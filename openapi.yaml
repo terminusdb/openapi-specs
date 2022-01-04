@@ -630,13 +630,14 @@ paths:
             application/json:
               schema:
                 type: object
+                example: { "@id" : "Person/Jane", "@type" : "Person", "name" : "Jannet"}
         404:
           description: "Failed to apply patch: returning conflict patch"
           content:
             application/json:
               schema:
                 type: object
-                example: { "@id" : "Person/Jane", "@type" : "Person", "name" : "Jannet"}
+                example: { "name" : { "@op" : "ValueSwap", "@before" : "Doug", "@after": "Jane" }}
 
 components:
 
