@@ -556,6 +556,7 @@ paths:
               schema:
                 type: object
                 
+
   /organization: # TODO: this one crashes!
     post:
       tags:
@@ -576,6 +577,65 @@ paths:
       responses:
         200:
           description: "Can't get this to work"
+          
+  /diff: # TODO: this one crashes!
+    post:
+      tags:
+        - diff
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                "before":
+                  type: object
+                  example: { "@id" : "Person/Jane", "@type" : "Person", "name" : "Jane"}
+                "after":
+                  type: object
+                  example: { "@id" : "Person/Jane", "@type" : "Person", "name" : "Jannet"}
+      responses:
+        200:
+          description: "Successful Diff"
+          content:
+            application/json:
+              schema:
+                type: object
+        404:
+          description: "Failed to find diff"
+          
+  /patch: # TODO: this one crashes!
+    post:
+      tags:
+        - patch
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                "before":
+                  type: object
+                  example: { "@id" : "Person/Jane", "@type" : "Person", "name" : "Jane"}
+                "patch":
+                  type: object
+                  example: { "name" : { "@op" : "ValueSwap", "@before" : "Jane", "@after": "Janine" }}
+      responses:
+        200:
+          description: "Successful Patch"
+          content:
+            application/json:
+              schema:
+                type: object
+        404:
+          description: "Failed to apply patch: returning conflict patch"
+          content:
+            application/json:
+              schema:
+                type: object
+
 components:
 
   parameters:
