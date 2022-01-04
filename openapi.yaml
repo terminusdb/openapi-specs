@@ -1,0 +1,710 @@
+openapi: 3.0.1
+info:
+  title: TerminusDB API
+  description: API for TerminusDB
+  contact:
+    email: team@terminusdb.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 10.0.3
+externalDocs:
+  description: Find out more about TerminusDB
+  url: https://terminusdb.com/docs/
+servers:
+- url: http://localhost:6363/api/
+security:
+- basicAuth: []
+tags:
+- name: TerminusDB
+  description: Everything about TerminusDB
+  externalDocs:
+    description: Find out more
+    url: https://terminusdb.com
+# TODO: Some paths are not covered yet:
+# - a lot of the git-like features
+paths:
+  /:
+    get:
+      tags:
+        - connection
+      summary: Get a list of databases for the authenticated user
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Database'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+  /info:
+    get:
+      tags:
+        - connection
+      summary: Get information about the TerminusDB version
+      responses:
+        200:
+          description: succesful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  "@type":
+                    type: string
+                    example: api:InfoResponse
+                  "api:info":
+                    type: object
+                    properties:
+                      "authority":
+                        type: string
+                        example: "terminusdb://system/data/User/admin"
+                      "storage":
+                        type: object
+                        properties:
+                          "version":
+                            type: string
+                            example: "1"
+                      "terminusdb":
+                        type: object
+                        properties:
+                          "version":
+                            type: string
+                            example: "10.0.13"
+                      "terminusdb_store":
+                        type: object
+                        properties:
+                          "version":
+                            type: string
+                            example: "0.19.5"
+                  "api:status":
+                    type: string
+                    example: api:success
+  /ok:
+    get:
+      tags:
+        - connection
+      summary: Simple status update
+      responses:
+        200:
+          description: Succeeded
+  /db/{organization}/{database}:
+    post:
+      tags:
+        - database
+      summary: Create a database
+      parameters:
+        - $ref: '#/components/parameters/organization'
+        - $ref: '#/components/parameters/database'
+      requestBody: # TODO: Missing prefixes
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                comment:
+                  type: string
+                  example: A sample comment for my database
+                label:
+                  type: string
+                  example: Testdatabase
+                public:
+                  type: boolean
+                  example: false
+                  description: Should the database be accessible for all users?
+                schema:
+                  type: boolean
+                  example: true
+                  description: Should the database be initialized with a schema?
+              required:
+                - comment
+                - label
+      responses:
+        200:
+          description: Added database
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  "@type":
+                    type: string
+                    example: api:DbCreateResponse
+                  "api:status":
+                    type: string
+                    example: api:success
+        400:
+          description: Database already exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  "@type":
+                    type: string
+                    example: api:DbCreateErrorResponse
+                  "api:error":
+                    type: object
+                    properties:
+                      "@type":
+                        type: string
+                        example: api:DatabaseAlreadyExists
+                      "api:database_name":
+                        type: string
+                        example: MyNewAlreadyExistingDatabase
+                      "api:organization_name":
+                        type: string
+                        example: admin
+                  "api:message":
+                    type: string
+                    example: Database already exists.
+                  "api:status":
+                    type: string
+                    example: api:failure
+                    
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+    delete:
+      tags:
+        - database
+      summary: Delete a database
+      parameters:
+        - $ref: '#/components/parameters/organization'
+        - $ref: '#/components/parameters/database'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                "force":
+                  type: boolean
+                  example: false
+                  description: Force database to be deleted
+      responses:
+        200:
+          description: Succesfully deleted DB
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  "@type":
+                    type: string
+                    example: api:DbDeleteResponse
+                  "api:status":
+                    type: string
+                    example: api:success
+        403:
+          description: Forbidden
+        404:
+          description: Can't find DB
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  "@type":
+                    type: string
+                    example: api:DbDeleteErrorResponse
+                  "api:error":
+                    type: object
+                    properties:
+                      "@type":
+                        type: string
+                        example: api:UnknownDatabase
+                      "api:database_name":
+                        type: string
+                        example: MyNonExistingDatabase
+                      "api:organization_name":
+                        type: string
+                        example: admin
+            
+  /document/{path}:
+    get:
+      tags:
+        - document
+      summary: Get a document
+      parameters:
+        - $ref: '#/components/parameters/document_path'
+        - $ref: '#/components/parameters/graph_type'
+        - name: skip
+          in: query
+          description: Skip a certain amount of documents
+          required: false
+          schema:
+            type: integer
+            default: 0
+        - name: count
+          in: query
+          description: Number of entries to show
+          required: false
+          schema:
+            type: integer
+            example: 3
+        - name: minimized
+          in: query
+          description: Minify the output
+          required: false
+          schema:
+            type: boolean
+            default: true
+        - name: as_list
+          in: query
+          description: Return the JSONs as list instead of concatenated json
+          required: false
+          schema:
+            type: boolean
+            default: false
+        - name: unfold
+          in: query
+          description: Unfold the documents (join other referenced documents)
+          schema:
+            type: boolean
+            default: true
+        - name: id
+          in: query
+          required: false
+          description: Specific document ID to look for
+          schema:
+            type: string
+            example: Person_Robin_1991-02-01
+        - name: type
+          in: query
+          required: false
+          description: Get documents of only a specific type
+          schema:
+            type: string
+            example: Person
+        # TODO: Prefixed and compress ids
+        
+      responses:
+        200:
+          description: List of documents
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Concatenated list of JSON documents
+                example: {"@id":"Organization/admin", "@type":"Organization", "database": ["SystemDatabase/system", "UserDatabase/60c35164e937174bbf4dd814c78153d660edc55b3d799c534c1e2d872a3d2dd6" ], "name":"admin"}
+      
+    post:
+      tags:
+        - document
+      summary: Insert a new document
+      parameters:
+        - $ref: '#/components/parameters/document_path'
+        - $ref: '#/components/parameters/author'
+        - $ref: '#/components/parameters/message'
+        - $ref: '#/components/parameters/graph_type'
+        - name: full_replace
+          in: query
+          required: false
+          description: Fully replace a document
+          schema:
+            type: boolean
+            default: false
+      responses:
+        200:
+          description: Succesfully added documents
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Added documents
+                
+    delete:
+      tags:
+        - document
+      summary: Delete one or multiple documents
+      parameters:
+        - $ref: '#/components/parameters/document_path'
+        - $ref: '#/components/parameters/author'
+        - $ref: '#/components/parameters/message'
+        - $ref: '#/components/parameters/graph_type'
+        - name: nuke
+          in: query
+          description: Totally nuke the document(s)
+          schema:
+            type: boolean
+            default: false
+        - name: id
+          in: query
+          description: ID of document(s)
+          schema:
+            type: string
+            example: admin/SomeDocument
+      responses:
+        200:
+          description: Succesfully deleted document(s)
+          # TODO: Need the proper JSON resposne!
+    put: 
+      tags:
+        - document
+      summary: Replace a document
+      parameters:
+        - $ref: '#/components/parameters/document_path'
+        - $ref: '#/components/parameters/author'
+        - $ref: '#/components/parameters/message'
+        - $ref: '#/components/parameters/graph_type'
+        - name: create
+          in: query
+          description: Create a document if it does not exist
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        200:
+          description: Succesfully replaced documents
+  /woql:
+    post:
+      tags:
+        - WOQL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WoqlQuery'
+      responses:
+        200:
+          description: Query result
+  /woql/{path}:
+    post:
+      tags:
+        - WOQL
+      parameters:
+        - name: path
+          description: WOQL Path
+          in: path
+          required: true
+          schema:
+            type: string
+            example: admin/foo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WoqlQuery'
+      responses:
+        200:
+          description: Query result
+  /branch/{path}:
+    post:
+      tags:
+        - branches
+      parameters:
+        - $ref: '#/components/parameters/branch_path'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        200:
+          description: "Branch succesfully added"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  "@type:":
+                    type: string
+                    enum:
+                      - "api:BranchResponse"
+                  "api:status":
+                    type: string
+                    enum:
+                      - "api:success"
+    delete:
+      tags:
+        - branches
+      parameters:
+        - $ref: '#/components/parameters/branch_path'
+      responses:
+        200:
+          description: "Branch succesfully deleted"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  "@type:":
+                    type: string
+                    enum:
+                      - "api:BranchResponse"
+                  "api:status":
+                    type: string
+                    enum:
+                      - "api:success"
+                      
+  /squash/{path}:
+    parameters:
+        - $ref: '#/components/parameters/branch_path'
+    get:
+      tags:
+        - branches
+      responses:
+        200:
+          description: "Succesfully squashed the branch"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  "@type":
+                    type: string
+                    enum:
+                      - "api:SquashResponse"
+                  "api:commit":
+                    type: string
+                    example: admin/test/local/commit/apgatilsa03g4lsa9ra5698wom5wcv7
+                  "api:old_commit":
+                    type: string
+                    example: admin/test/local/commit/5jndjh9lexe62q9u1q2vofyjemfnmyt
+                  "api:status":
+                    type: string
+                    enum:
+                    - api:success
+  /reset/{path}:
+    parameters:
+      - $ref: '#/components/parameters/branch_path'
+    post:
+      tags:
+        - branches
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                commit_descriptor:
+                  type: string
+                  example: admin/test/local/commit/5jndjh9lexe62q9u1q2vofyjemfnmyt
+      responses:
+        200:
+          description: "Succesfully reset branch HEAD to commit_descriptor"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  "@type":
+                    type: string
+                    enum:
+                      - api:ResetResponse
+                  "api:status":
+                    type: string
+                    enum:
+                      - api:success
+  /optimize/{path}:
+    post:
+      parameters:
+        - name: path
+          description: WOQL Path
+          in: path
+          required: true
+          schema:
+            type: string
+            example: _system
+      responses:
+        200:
+          description: Succesfully optimized resource
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  "@type":
+                    type: string
+                    enum:
+                      - api:OptimizeResponse
+                  "api:status":
+                    type: string
+                    enum:
+                      - api:success
+      tags:
+        - optimize
+    
+    
+  /prefixes/{path}:
+    get:
+      tags:
+        - prefixes
+      parameters:
+        - name: path
+          description: WOQL Path
+          in: path
+          required: true
+          schema:
+            type: string
+            example: _system
+      responses:
+        200:
+          description: "Succesfully fetched prefixes of graph"
+          content:
+            application/json:
+              schema:
+                type: object
+                
+  /organization: # TODO: this one crashes!
+    post:
+      tags:
+        - organization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                "organization_name":
+                  type: string
+                  example: MyOrganization
+                "user_name":
+                  type: string
+                  example: myusername
+      responses:
+        200:
+          description: "Can't get this to work"
+components:
+
+  parameters:
+    graph_type:
+      name: graph_type
+      in: query
+      description: Type of the graph
+      required: false
+      schema:
+        type: string
+        default: instance
+        enum:
+          - instance
+          - schema
+    author:
+      name: author
+      in: query
+      description: Author of commit
+      required: true
+      schema:
+        type: string
+        example: Jan
+    message:
+      name: message
+      in: query
+      description: Commit message
+      required: true
+      schema:
+        type: string
+        example: Fixed bad name for document
+    branch_path:
+      name: path
+      in: path
+      description: Path for branch
+      required: true
+      schema:
+        type: string
+        example: admin/test/local/branch/foo
+    document_path:
+      name: path
+      in: path
+      description: Path for document
+      required: true
+      schema:
+        type: string
+        example: admin/foo
+    organization:
+      name: organization
+      in: path
+      description: Organization for the database
+      required: true
+      schema:
+        type: string
+        example: admin
+    database:
+      name: database
+      in: path
+      description: Database name
+      required: true
+      schema:
+        type: string
+        example: MyNewDatabase
+  schemas:
+    WoqlQuery:
+      type: object
+      properties:
+        "query":
+          type: object
+          # TODO: Nice example of a WOQL Query
+          description: WOQL Query
+        "commit_info":
+          $ref: "#/components/schemas/CommitInfo"
+        "all_witnesses":
+          type: boolean
+          description: Check for all errors
+          default: false
+    CommitInfo:
+      type: object
+      properties:
+        "author":
+          type: string
+          example: ExampleUser
+        "message":
+          type: string
+          example: Created something in the data product
+    Database:
+      type: object
+      properties:
+        '@id':
+          type: string
+          example: UserDatabase/MyUserDatabase3315d1a3bb196e322e40bc53ac
+        '@type':
+          type: string
+          example: UserDatabase
+        comment:
+          type: string
+          example: A comment for my database
+        creation_date:
+          type: string
+          example: 2021-12-13T14:27:46.202Z
+        label:
+          type: string
+          example: MyDatabaseLabel
+        name:
+          type: string
+          example: My Database Name
+        state:
+          type: string
+          example: finalized
+  responses:
+    UnauthorizedError:
+      description: Authentication information is missing or invalid
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              '@type':
+                type: string
+                example: api:ErrorResponse
+              api:error:
+                type: string
+              api:message:
+                type: string
+                example: Incorrect authentication information
+              api:status:
+                type: string
+                example: api:failure
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
