@@ -165,7 +165,7 @@ paths:
                   "api:status":
                     type: string
                     example: api:failure
-                    
+
         401:
           $ref: '#/components/responses/UnauthorizedError'
     delete:
@@ -224,7 +224,7 @@ paths:
                       "api:organization_name":
                         type: string
                         example: admin
-            
+
   /document/{path}:
     get:
       tags:
@@ -282,7 +282,7 @@ paths:
             type: string
             example: Person
         # TODO: Prefixed and compress ids
-        
+
       responses:
         200:
           description: List of documents
@@ -292,7 +292,7 @@ paths:
                 type: object
                 description: Concatenated list of JSON documents
                 example: {"@id":"Organization/admin", "@type":"Organization", "database": ["SystemDatabase/system", "UserDatabase/60c35164e937174bbf4dd814c78153d660edc55b3d799c534c1e2d872a3d2dd6" ], "name":"admin"}
-      
+
     post:
       tags:
         - document
@@ -317,7 +317,7 @@ paths:
               schema:
                 type: object
                 description: Added documents
-                
+
     delete:
       tags:
         - document
@@ -445,7 +445,7 @@ paths:
                     type: string
                     enum:
                       - "api:success"
-                      
+
   /squash/{path}:
     parameters:
         - $ref: '#/components/parameters/branch_path'
@@ -534,8 +534,7 @@ paths:
                       - api:success
       tags:
         - optimize
-    
-    
+
   /prefixes/{path}:
     get:
       tags:
@@ -555,7 +554,7 @@ paths:
             application/json:
               schema:
                 type: object
-                
+
 
   /organization: # TODO: this one crashes!
     post:
@@ -577,8 +576,8 @@ paths:
       responses:
         200:
           description: "Can't get this to work"
-          
-  /diff: # TODO: this one crashes!
+
+  /diff:
     post:
       tags:
         - diff
@@ -604,8 +603,8 @@ paths:
                 type: object
         404:
           description: "Failed to find diff"
-          
-  /patch: # TODO: this one crashes!
+
+  /patch:
     post:
       tags:
         - patch
