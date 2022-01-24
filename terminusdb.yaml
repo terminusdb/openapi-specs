@@ -594,6 +594,9 @@ paths:
                 "after":
                   type: object
                   example: { "@id" : "Person/Jane", "@type" : "Person", "name" : "Jannet"}
+                "keep":
+                  type: object
+                  example: { "@id" : true, "_id" : true }
       responses:
         200:
           description: "Successful Diff"
