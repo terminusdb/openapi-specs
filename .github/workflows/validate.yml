@@ -1,0 +1,45 @@
+# Validate OpenAPI specifications using the Swagger Editor
+name: validate
+
+on:
+  push:
+    paths-ignore:
+      - README.md
+      - LICENSE
+  pull_request:
+    paths-ignore:
+      - LICENSE
+      - README.md
+  workflow_dispatch:
+
+jobs:
+
+  skip_pull_request_after_push:
+    runs-on: ubuntu-latest
+    name: Skip validate for pull request after push
+
+    outputs:
+      should_skip: ${{ steps.skip_pull_request_after_push.outputs.should_skip }}
+
+    steps:
+      - uses: fkirc/skip-duplicate-actions@master
+        id: skip_pull_request_after_push
+        with:
+          concurrent_skipping: same_content_newer
+          do_not_skip: '["push", "workflow_dispatch", "schedule"]'
+
+  validate:
+    runs-on: ubuntu-latest
+    name: Validate using Swagger Editor
+
+    # Check if this job needs to run. We skip a pull_request triggered after a push.
+    needs: skip_pull_request_after_push
+    if: needs.skip_pull_request_after_push.outputs.should_skip != 'true'
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: char0n/swagger-editor-validate@v1
+        with:
+          definition-file: terminusdb.yaml
+          ignore-error: .github/ignore-errors.js
