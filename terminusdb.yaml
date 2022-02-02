@@ -1,29 +1,30 @@
 openapi: 3.0.1
+
 info:
   title: TerminusDB API
-  description: API for TerminusDB
+  description: HTTP API specification for TerminusDB and TerminusX
   contact:
     email: team@terminusdb.com
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: 10.0.3
+
 externalDocs:
-  description: Find out more about TerminusDB
+  description: TerminusDB Docs
   url: https://terminusdb.com/docs/
+
 servers:
-- url: http://localhost:6363/api/
+  - url: http://localhost:6363/api
+    description: A local instance of TerminusDB
+  - url: https://cloud.terminusdb.com/my_team/api
+    description: A TerminusX server for the team named `my_team`
+
 security:
-- basicAuth: []
-tags:
-- name: TerminusDB
-  description: Everything about TerminusDB
-  externalDocs:
-    description: Find out more
-    url: https://terminusdb.com
-# TODO: Some paths are not covered yet:
-# - a lot of the git-like features
+  - basicAuth: []
+
 paths:
+
   /:
     get:
       tags:
@@ -40,6 +41,7 @@ paths:
                   $ref: '#/components/schemas/Database'
         401:
           $ref: '#/components/responses/UnauthorizedError'
+
   /info:
     get:
       tags:
@@ -83,6 +85,7 @@ paths:
                   "api:status":
                     type: string
                     example: api:success
+
   /ok:
     get:
       tags:
@@ -91,6 +94,7 @@ paths:
       responses:
         200:
           description: Succeeded
+
   /db/{organization}/{database}:
     post:
       tags:
@@ -99,7 +103,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/organization'
         - $ref: '#/components/parameters/database'
-      requestBody: # TODO: Missing prefixes
+      requestBody:
         required: true
         content:
           application/json:
@@ -165,7 +169,6 @@ paths:
                   "api:status":
                     type: string
                     example: api:failure
-
         401:
           $ref: '#/components/responses/UnauthorizedError'
     delete:
@@ -281,8 +284,6 @@ paths:
           schema:
             type: string
             example: Person
-        # TODO: Prefixed and compress ids
-
       responses:
         200:
           description: List of documents
@@ -292,7 +293,6 @@ paths:
                 type: object
                 description: Concatenated list of JSON documents
                 example: {"@id":"Organization/admin", "@type":"Organization", "database": ["SystemDatabase/system", "UserDatabase/60c35164e937174bbf4dd814c78153d660edc55b3d799c534c1e2d872a3d2dd6" ], "name":"admin"}
-
     post:
       tags:
         - document
@@ -317,7 +317,6 @@ paths:
               schema:
                 type: object
                 description: Added documents
-
     delete:
       tags:
         - document
@@ -342,7 +341,6 @@ paths:
       responses:
         200:
           description: Succesfully deleted document(s)
-          # TODO: Need the proper JSON resposne!
     put: 
       tags:
         - document
@@ -474,6 +472,7 @@ paths:
                     type: string
                     enum:
                     - api:success
+
   /reset/{path}:
     parameters:
       - $ref: '#/components/parameters/branch_path'
@@ -506,6 +505,7 @@ paths:
                     type: string
                     enum:
                       - api:success
+
   /optimize/{path}:
     post:
       parameters:
@@ -555,8 +555,7 @@ paths:
               schema:
                 type: object
 
-
-  /organization: # TODO: this one crashes!
+  /organization:
     post:
       tags:
         - organization
@@ -605,7 +604,6 @@ paths:
               schema:
                 type: object
                 example: { "name" : { "@op" : "ValueSwap", "@before" : "Jane", "@after": "Janine" }}
-
         404:
           description: "Failed to find diff"
 
@@ -704,13 +702,13 @@ components:
       schema:
         type: string
         example: MyNewDatabase
+
   schemas:
     WoqlQuery:
       type: object
       properties:
         "query":
           type: object
-          # TODO: Nice example of a WOQL Query
           description: WOQL Query
         "commit_info":
           $ref: "#/components/schemas/CommitInfo"
@@ -751,6 +749,7 @@ components:
         state:
           type: string
           example: finalized
+
   responses:
     UnauthorizedError:
       description: Authentication information is missing or invalid
@@ -770,6 +769,7 @@ components:
               api:status:
                 type: string
                 example: api:failure
+
   securitySchemes:
     basicAuth:
       type: http
