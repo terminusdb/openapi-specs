@@ -62,27 +62,27 @@ paths:
                   "api:info":
                     type: object
                     properties:
-                      "authority":
+                      authority:
                         type: string
-                        example: "terminusdb://system/data/User/admin"
-                      "storage":
+                        example: terminusdb://system/data/User/admin
+                      storage:
                         type: object
                         properties:
-                          "version":
+                          version:
                             type: string
                             example: "1"
-                      "terminusdb":
+                      terminusdb:
                         type: object
                         properties:
-                          "version":
+                          version:
                             type: string
-                            example: "10.0.13"
-                      "terminusdb_store":
+                            example: 10.0.13
+                      terminusdb_store:
                         type: object
                         properties:
-                          "version":
+                          version:
                             type: string
-                            example: "0.19.5"
+                            example: 0.19.5
                   "api:status":
                     type: string
                     example: api:success
@@ -202,7 +202,7 @@ paths:
             schema:
               type: object
               properties:
-                "force":
+                force:
                   type: boolean
                   example: false
                   description: Force database to be deleted
@@ -309,7 +309,16 @@ paths:
               schema:
                 type: object
                 description: Concatenated list of JSON documents
-                example: {"@id":"Organization/admin", "@type":"Organization", "database": ["SystemDatabase/system", "UserDatabase/60c35164e937174bbf4dd814c78153d660edc55b3d799c534c1e2d872a3d2dd6" ], "name":"admin"}
+                example:
+                  {
+                    "@id": "Organization/admin",
+                    "@type": "Organization",
+                    "database": [
+                      "SystemDatabase/system",
+                      "UserDatabase/60c35164e937174bbf4dd814c78153d660edc55b3d799c534c1e2d872a3d2dd6"
+                    ],
+                    "name": "admin"
+                  }
     post:
       summary: Insert a new document
       tags:
@@ -358,7 +367,7 @@ paths:
       responses:
         "200":
           description: Succesfully deleted document(s)
-    put: 
+    put:
       summary: Replace a document
       tags:
         - document
@@ -463,7 +472,7 @@ paths:
 
   /squash/{path}:
     parameters:
-        - $ref: '#/components/parameters/branch_path'
+      - $ref: '#/components/parameters/branch_path'
     get:
       tags:
         - branches
@@ -481,14 +490,16 @@ paths:
                       - "api:SquashResponse"
                   "api:commit":
                     type: string
-                    example: admin/test/local/commit/apgatilsa03g4lsa9ra5698wom5wcv7
+                    example: >
+                      admin/test/local/commit/apgatilsa03g4lsa9ra5698wom5wcv7
                   "api:old_commit":
                     type: string
-                    example: admin/test/local/commit/5jndjh9lexe62q9u1q2vofyjemfnmyt
+                    example: >
+                      admin/test/local/commit/5jndjh9lexe62q9u1q2vofyjemfnmyt
                   "api:status":
                     type: string
                     enum:
-                    - api:success
+                      - api:success
 
   /reset/{path}:
     parameters:
@@ -505,7 +516,8 @@ paths:
               properties:
                 commit_descriptor:
                   type: string
-                  example: admin/test/local/commit/5jndjh9lexe62q9u1q2vofyjemfnmyt
+                  example: >
+                    admin/test/local/commit/5jndjh9lexe62q9u1q2vofyjemfnmyt
       responses:
         "200":
           description: "Succesfully reset branch HEAD to commit_descriptor"
@@ -604,15 +616,29 @@ paths:
             schema:
               type: object
               properties:
-                "before":
+                before:
                   type: object
-                  example: { "@id" : "Person/Jane", "@type" : "Person", "name" : "Jane"}
-                "after":
+                  example:
+                    {
+                      "@id": "Person/Jane",
+                      "@type": "Person",
+                      "name": "Jane"
+                    }
+                after:
                   type: object
-                  example: { "@id" : "Person/Jane", "@type" : "Person", "name" : "Jannet"}
-                "keep":
+                  example:
+                    {
+                      "@id": "Person/Jane",
+                      "@type": "Person",
+                      "name": "Jannet"
+                    }
+                keep:
                   type: object
-                  example: { "@id" : true, "_id" : true }
+                  example:
+                    {
+                      "@id": true,
+                      "_id": true
+                    }
       responses:
         "200":
           description: "Successful Diff"
@@ -620,7 +646,15 @@ paths:
             application/json:
               schema:
                 type: object
-                example: { "name" : { "@op" : "ValueSwap", "@before" : "Jane", "@after": "Janine" }}
+                example:
+                  {
+                    "name":
+                      {
+                        "@op": "ValueSwap",
+                        "@before": "Jane",
+                        "@after": "Janine"
+                      }
+                  }
         "404":
           description: "Failed to find diff"
 
@@ -635,12 +669,25 @@ paths:
             schema:
               type: object
               properties:
-                "before":
+                before:
                   type: object
-                  example: { "@id" : "Person/Jane", "@type" : "Person", "name" : "Jane"}
-                "patch":
+                  example:
+                    {
+                      "@id": "Person/Jane",
+                      "@type": "Person",
+                      "name": "Jane"
+                    }
+                patch:
                   type: object
-                  example: { "name" : { "@op" : "ValueSwap", "@before" : "Jane", "@after": "Janine" }}
+                  example:
+                    {
+                      "name":
+                        {
+                          "@op": "ValueSwap",
+                          "@before": "Jane",
+                          "@after": "Janine"
+                        }
+                    }
       responses:
         "200":
           description: "Successful Patch"
@@ -648,14 +695,27 @@ paths:
             application/json:
               schema:
                 type: object
-                example: { "@id" : "Person/Jane", "@type" : "Person", "name" : "Jannet"}
+                example:
+                  {
+                    "@id": "Person/Jane",
+                    "@type": "Person",
+                    "name": "Jannet"
+                  }
         "404":
           description: "Failed to apply patch: returning conflict patch"
           content:
             application/json:
               schema:
                 type: object
-                example: { "name" : { "@op" : "ValueSwap", "@before" : "Doug", "@after": "Jane" }}
+                example:
+                  {
+                    "name":
+                      {
+                        "@op": "ValueSwap",
+                        "@before": "Doug",
+                        "@after": "Jane"
+                      }
+                  }
 
 components:
 
@@ -724,22 +784,22 @@ components:
     WoqlQuery:
       type: object
       properties:
-        "query":
+        query:
           type: object
           description: WOQL Query
-        "commit_info":
+        commit_info:
           $ref: "#/components/schemas/CommitInfo"
-        "all_witnesses":
+        all_witnesses:
           type: boolean
           description: Check for all errors
           default: false
     CommitInfo:
       type: object
       properties:
-        "author":
+        author:
           type: string
           example: ExampleUser
-        "message":
+        message:
           type: string
           example: Created something in the data product
     Database:
