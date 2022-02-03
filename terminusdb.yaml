@@ -1,3 +1,4 @@
+---
 openapi: 3.0.1
 
 info:
@@ -110,20 +111,34 @@ paths:
             schema:
               type: object
               properties:
-                comment:
-                  type: string
-                  example: A sample comment for my database
                 label:
+                  description: Displayed name of the database
                   type: string
-                  example: Testdatabase
+                  example: Squid Species
+                comment:
+                  description: Description of the database
+                  type: string
+                  example: This database contains information on all known species of the order TODO
                 public:
+                  description: Visible to anonymous users
                   type: boolean
-                  example: false
-                  description: Should the database be accessible for all users?
+                  default: false
                 schema:
+                  description: Schema-checking is enabled
                   type: boolean
-                  example: true
-                  description: Should the database be initialized with a schema?
+                  default: true
+                prefixes:
+                  description: Default prefixes for identifiers
+                  type: object
+                  properties:
+                    "@base":
+                      description: Default prefix for instance identifiers
+                      type: string
+                      default: terminusdb:///data/
+                    "@schema":
+                      description: Default prefix for schema identifiers
+                      type: string
+                      default: terminusdb:///schema#
               required:
                 - comment
                 - label
