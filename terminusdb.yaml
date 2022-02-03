@@ -28,9 +28,9 @@ paths:
 
   /:
     get:
+      summary: Get a list of databases for the authenticated user
       tags:
         - connection
-      summary: Get a list of databases for the authenticated user
       responses:
         200:
           description: successful operation
@@ -45,9 +45,9 @@ paths:
 
   /info:
     get:
+      summary: Get information about the TerminusDB version
       tags:
         - connection
-      summary: Get information about the TerminusDB version
       responses:
         200:
           description: succesful operation
@@ -89,18 +89,18 @@ paths:
 
   /ok:
     get:
+      summary: Simple status update
       tags:
         - connection
-      summary: Simple status update
       responses:
         200:
           description: Succeeded
 
   /db/{organization}/{database}:
     post:
+      summary: Create a database
       tags:
         - database
-      summary: Create a database
       parameters:
         - $ref: '#/components/parameters/organization'
         - $ref: '#/components/parameters/database'
@@ -118,7 +118,9 @@ paths:
                 comment:
                   description: Description of the database
                   type: string
-                  example: This database contains information on all known species of the order TODO
+                  example: >
+                    This database contains information on all known species of
+                    the order TODO.
                 public:
                   description: Visible to anonymous users
                   type: boolean
@@ -144,7 +146,7 @@ paths:
                 - label
       responses:
         200:
-          description: Added database
+          description: Database created
           content:
             application/json:
               schema:
@@ -187,9 +189,9 @@ paths:
         401:
           $ref: '#/components/responses/UnauthorizedError'
     delete:
+      summary: Delete a database
       tags:
         - database
-      summary: Delete a database
       parameters:
         - $ref: '#/components/parameters/organization'
         - $ref: '#/components/parameters/database'
@@ -245,9 +247,9 @@ paths:
 
   /document/{path}:
     get:
+      summary: Get a document
       tags:
         - document
-      summary: Get a document
       parameters:
         - $ref: '#/components/parameters/document_path'
         - $ref: '#/components/parameters/graph_type'
@@ -309,9 +311,9 @@ paths:
                 description: Concatenated list of JSON documents
                 example: {"@id":"Organization/admin", "@type":"Organization", "database": ["SystemDatabase/system", "UserDatabase/60c35164e937174bbf4dd814c78153d660edc55b3d799c534c1e2d872a3d2dd6" ], "name":"admin"}
     post:
+      summary: Insert a new document
       tags:
         - document
-      summary: Insert a new document
       parameters:
         - $ref: '#/components/parameters/document_path'
         - $ref: '#/components/parameters/author'
@@ -333,9 +335,9 @@ paths:
                 type: object
                 description: Added documents
     delete:
+      summary: Delete one or multiple documents
       tags:
         - document
-      summary: Delete one or multiple documents
       parameters:
         - $ref: '#/components/parameters/document_path'
         - $ref: '#/components/parameters/author'
@@ -357,9 +359,9 @@ paths:
         200:
           description: Succesfully deleted document(s)
     put: 
+      summary: Replace a document
       tags:
         - document
-      summary: Replace a document
       parameters:
         - $ref: '#/components/parameters/document_path'
         - $ref: '#/components/parameters/author'
