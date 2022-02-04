@@ -1,8 +1,7 @@
 openapi: 3.0.1
 
 info:
-  title: TerminusDB API
-  description: HTTP API specification for TerminusDB and TerminusX
+  title: TerminusDB API Documentation
   x-logo:
     url: https://raw.githubusercontent.com/terminusdb/terminusdb-web-assets/master/images/TerminusDB-Pop-Small.gif
   contact:
@@ -10,11 +9,15 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: 10.0.3
+  version: latest
+  description: |
+    This page contains the documentation on how to use
+    [TerminusDB](https://terminusdb.com/) through HTTP API operations.
 
-externalDocs:
-  description: TerminusDB Docs
-  url: https://terminusdb.com/docs/
+    ### Resources
+
+    For more on how to work with TerminusDB, check out the [rest of the
+    Documentation](https://terminusdb.com/docs/).
 
 servers:
   - url: http://localhost:6363/api
