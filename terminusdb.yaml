@@ -48,7 +48,7 @@ tags:
   - name: Optimize
     description: |
       These endpoints provide operations to optimize a database.
-  - name: Information
+  - name: Server
     description: |
       These endpoints provide information about the server.
 
@@ -67,7 +67,7 @@ paths:
     get:
       summary: Get a list of databases for the authenticated user
       tags:
-        - Information
+        - Databases
       responses:
         "200":
           description: successful operation
@@ -84,7 +84,7 @@ paths:
     get:
       summary: Get information about the TerminusDB version
       tags:
-        - Information
+        - Server
       responses:
         "200":
           description: succesful operation
@@ -128,7 +128,7 @@ paths:
     get:
       summary: Simple status update
       tags:
-        - Information
+        - Server
       responses:
         "200":
           description: Succeeded
