@@ -50,9 +50,9 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Database'
+                  $ref: "#/components/schemas/Database"
         "401":
-          $ref: '#/components/responses/UnauthorizedError'
+          $ref: "#/components/responses/UnauthorizedError"
 
   /info:
     get:
@@ -113,8 +113,8 @@ paths:
       tags:
         - database
       parameters:
-        - $ref: '#/components/parameters/organization'
-        - $ref: '#/components/parameters/database'
+        - $ref: "#/components/parameters/organization"
+        - $ref: "#/components/parameters/database"
       requestBody:
         required: true
         content:
@@ -198,14 +198,14 @@ paths:
                     type: string
                     example: api:failure
         "401":
-          $ref: '#/components/responses/UnauthorizedError'
+          $ref: "#/components/responses/UnauthorizedError"
     delete:
       summary: Delete a database
       tags:
         - database
       parameters:
-        - $ref: '#/components/parameters/organization'
-        - $ref: '#/components/parameters/database'
+        - $ref: "#/components/parameters/organization"
+        - $ref: "#/components/parameters/database"
       requestBody:
         required: false
         content:
@@ -234,7 +234,7 @@ paths:
         "403":
           description: Forbidden
         "404":
-          description: Can't find DB
+          description: Can"t find DB
           content:
             application/json:
               schema:
@@ -262,8 +262,8 @@ paths:
       tags:
         - document
       parameters:
-        - $ref: '#/components/parameters/document_path'
-        - $ref: '#/components/parameters/graph_type'
+        - $ref: "#/components/parameters/document_path"
+        - $ref: "#/components/parameters/graph_type"
         - name: skip
           in: query
           description: Skip a certain amount of documents
@@ -336,10 +336,10 @@ paths:
       tags:
         - document
       parameters:
-        - $ref: '#/components/parameters/document_path'
-        - $ref: '#/components/parameters/author'
-        - $ref: '#/components/parameters/message'
-        - $ref: '#/components/parameters/graph_type'
+        - $ref: "#/components/parameters/document_path"
+        - $ref: "#/components/parameters/author"
+        - $ref: "#/components/parameters/message"
+        - $ref: "#/components/parameters/graph_type"
         - name: full_replace
           in: query
           required: false
@@ -360,10 +360,10 @@ paths:
       tags:
         - document
       parameters:
-        - $ref: '#/components/parameters/document_path'
-        - $ref: '#/components/parameters/author'
-        - $ref: '#/components/parameters/message'
-        - $ref: '#/components/parameters/graph_type'
+        - $ref: "#/components/parameters/document_path"
+        - $ref: "#/components/parameters/author"
+        - $ref: "#/components/parameters/message"
+        - $ref: "#/components/parameters/graph_type"
         - name: nuke
           in: query
           description: Totally nuke the document(s)
@@ -384,10 +384,10 @@ paths:
       tags:
         - document
       parameters:
-        - $ref: '#/components/parameters/document_path'
-        - $ref: '#/components/parameters/author'
-        - $ref: '#/components/parameters/message'
-        - $ref: '#/components/parameters/graph_type'
+        - $ref: "#/components/parameters/document_path"
+        - $ref: "#/components/parameters/author"
+        - $ref: "#/components/parameters/message"
+        - $ref: "#/components/parameters/graph_type"
         - name: create
           in: query
           description: Create a document if it does not exist
@@ -407,7 +407,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/WoqlQuery'
+              $ref: "#/components/schemas/WoqlQuery"
       responses:
         "200":
           description: Query result
@@ -428,7 +428,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/WoqlQuery'
+              $ref: "#/components/schemas/WoqlQuery"
       responses:
         "200":
           description: Query result
@@ -437,7 +437,7 @@ paths:
       tags:
         - branches
       parameters:
-        - $ref: '#/components/parameters/branch_path'
+        - $ref: "#/components/parameters/branch_path"
       requestBody:
         required: true
         content:
@@ -446,7 +446,7 @@ paths:
               type: object
       responses:
         "200":
-          description: "Branch succesfully added"
+          description: Branch succesfully added
           content:
             application/json:
               schema:
@@ -455,19 +455,19 @@ paths:
                   "@type:":
                     type: string
                     enum:
-                      - "api:BranchResponse"
+                      - api:BranchResponse
                   "api:status":
                     type: string
                     enum:
-                      - "api:success"
+                      - api:success
     delete:
       tags:
         - branches
       parameters:
-        - $ref: '#/components/parameters/branch_path'
+        - $ref: "#/components/parameters/branch_path"
       responses:
         "200":
-          description: "Branch succesfully deleted"
+          description: Branch succesfully deleted
           content:
             application/json:
               schema:
@@ -476,21 +476,21 @@ paths:
                   "@type:":
                     type: string
                     enum:
-                      - "api:BranchResponse"
+                      - api:BranchResponse
                   "api:status":
                     type: string
                     enum:
-                      - "api:success"
+                      - api:success
 
   /squash/{path}:
     parameters:
-      - $ref: '#/components/parameters/branch_path'
+      - $ref: "#/components/parameters/branch_path"
     get:
       tags:
         - branches
       responses:
         "200":
-          description: "Succesfully squashed the branch"
+          description: Succesfully squashed the branch
           content:
             application/json:
               schema:
@@ -499,7 +499,7 @@ paths:
                   "@type":
                     type: string
                     enum:
-                      - "api:SquashResponse"
+                      - api:SquashResponse
                   "api:commit":
                     type: string
                     example: >
@@ -515,7 +515,7 @@ paths:
 
   /reset/{path}:
     parameters:
-      - $ref: '#/components/parameters/branch_path'
+      - $ref: "#/components/parameters/branch_path"
     post:
       tags:
         - branches
@@ -532,7 +532,7 @@ paths:
                     admin/test/local/commit/5jndjh9lexe62q9u1q2vofyjemfnmyt
       responses:
         "200":
-          description: "Succesfully reset branch HEAD to commit_descriptor"
+          description: Succesfully reset branch HEAD to commit_descriptor
           content:
             application/json:
               schema:
@@ -590,7 +590,7 @@ paths:
             example: _system
       responses:
         "200":
-          description: "Succesfully fetched prefixes of graph"
+          description: Succesfully fetched prefixes of graph
           content:
             application/json:
               schema:
@@ -607,15 +607,15 @@ paths:
             schema:
               type: object
               properties:
-                "organization_name":
+                organization_name:
                   type: string
                   example: MyOrganization
-                "user_name":
+                user_name:
                   type: string
                   example: myusername
       responses:
         "200":
-          description: "Can't get this to work"
+          description: Can't get this to work
 
   /diff:
     post:
@@ -631,44 +631,34 @@ paths:
                 before:
                   type: object
                   example:
-                    {
-                      "@id": "Person/Jane",
-                      "@type": "Person",
-                      "name": "Jane"
-                    }
+                    "@id": Person/Jane
+                    "@type": Person
+                    name: Jane
                 after:
                   type: object
                   example:
-                    {
-                      "@id": "Person/Jane",
-                      "@type": "Person",
-                      "name": "Jannet"
-                    }
+                    "@id": Person/Jane
+                    "@type": Person
+                    name: Jannet
                 keep:
                   type: object
                   example:
-                    {
-                      "@id": true,
-                      "_id": true
-                    }
+                    "@id": true
+                    _id: true
       responses:
         "200":
-          description: "Successful Diff"
+          description: Successful Diff
           content:
             application/json:
               schema:
                 type: object
                 example:
-                  {
-                    "name":
-                      {
-                        "@op": "ValueSwap",
-                        "@before": "Jane",
-                        "@after": "Janine"
-                      }
-                  }
+                  name:
+                    "@op": ValueSwap
+                    "@before": Jane
+                    "@after": Janine
         "404":
-          description: "Failed to find diff"
+          description: Failed to find diff
 
   /patch:
     post:
@@ -684,35 +674,27 @@ paths:
                 before:
                   type: object
                   example:
-                    {
-                      "@id": "Person/Jane",
-                      "@type": "Person",
-                      "name": "Jane"
-                    }
+                    "@id": Person/Jane
+                    "@type": Person
+                    name: Jane
                 patch:
                   type: object
                   example:
-                    {
-                      "name":
-                        {
-                          "@op": "ValueSwap",
-                          "@before": "Jane",
-                          "@after": "Janine"
-                        }
-                    }
+                    name:
+                      "@op": ValueSwap
+                      "@before": Jane
+                      "@after": Janine
       responses:
         "200":
-          description: "Successful Patch"
+          description: Successful Patch
           content:
             application/json:
               schema:
                 type: object
                 example:
-                  {
-                    "@id": "Person/Jane",
-                    "@type": "Person",
-                    "name": "Jannet"
-                  }
+                  "@id": Person/Jane
+                  "@type": Person
+                  name: Jannet
         "404":
           description: "Failed to apply patch: returning conflict patch"
           content:
@@ -720,14 +702,10 @@ paths:
               schema:
                 type: object
                 example:
-                  {
-                    "name":
-                      {
-                        "@op": "ValueSwap",
-                        "@before": "Doug",
-                        "@after": "Jane"
-                      }
-                  }
+                  name:
+                    "@op": ValueSwap
+                    "@before": Doug
+                    "@after": Jane
 
 components:
 
@@ -817,10 +795,10 @@ components:
     Database:
       type: object
       properties:
-        '@id':
+        "@id":
           type: string
           example: UserDatabase/MyUserDatabase3315d1a3bb196e322e40bc53ac
-        '@type':
+        "@type":
           type: string
           example: UserDatabase
         comment:
@@ -847,7 +825,7 @@ components:
           schema:
             type: object
             properties:
-              '@type':
+              "@type":
                 type: string
                 example: api:ErrorResponse
               api:error:
