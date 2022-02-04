@@ -33,6 +33,12 @@ tags:
   - name: Documents
     description: |
       These endpoints support the Document Interface.
+  - name: WOQL
+    description: |
+      These endpoints support the Web Object Query Language (WOQL).
+  - name: JSON Diff & Patch
+    description: |
+      These endpoints support diff and patch operations on JSON.
   - name: Information
     description: |
       These endpoints provide information about the server.
@@ -631,7 +637,7 @@ paths:
   /diff:
     post:
       tags:
-        - diff
+        - JSON Diff & Patch
       requestBody:
         required: true
         content:
@@ -674,7 +680,7 @@ paths:
   /patch:
     post:
       tags:
-        - patch
+        - JSON Diff & Patch
       requestBody:
         required: true
         content:
