@@ -3,6 +3,8 @@ openapi: 3.0.1
 info:
   title: TerminusDB API
   description: HTTP API specification for TerminusDB and TerminusX
+  x-logo:
+    url: https://raw.githubusercontent.com/terminusdb/terminusdb-web-assets/master/images/TerminusDB-Pop-Small.gif
   contact:
     email: team@terminusdb.com
   license:
