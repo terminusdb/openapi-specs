@@ -39,6 +39,15 @@ tags:
   - name: JSON Diff & Patch
     description: |
       These endpoints support diff and patch operations on JSON.
+  - name: Branch
+    description: |
+      These endpoints provide branch operations on a database.
+  - name: Prefixes
+    description: |
+      These endpoints provide access to prefixes.
+  - name: Optimize
+    description: |
+      These endpoints provide operations to optimize a database.
   - name: Information
     description: |
       These endpoints provide information about the server.
@@ -452,7 +461,7 @@ paths:
   /branch/{path}:
     post:
       tags:
-        - branches
+        - Branch
       parameters:
         - $ref: "#/components/parameters/branch_path"
       requestBody:
@@ -479,7 +488,7 @@ paths:
                       - api:success
     delete:
       tags:
-        - branches
+        - Branch
       parameters:
         - $ref: "#/components/parameters/branch_path"
       responses:
@@ -504,7 +513,7 @@ paths:
       - $ref: "#/components/parameters/branch_path"
     get:
       tags:
-        - branches
+        - Branch
       responses:
         "200":
           description: Succesfully squashed the branch
@@ -535,7 +544,7 @@ paths:
       - $ref: "#/components/parameters/branch_path"
     post:
       tags:
-        - branches
+        - Branch
       requestBody:
         required: true
         content:
@@ -591,12 +600,12 @@ paths:
                     enum:
                       - api:success
       tags:
-        - optimize
+        - Optimize
 
   /prefixes/{path}:
     get:
       tags:
-        - prefixes
+        - Prefixes
       parameters:
         - name: path
           description: WOQL Path
@@ -612,27 +621,6 @@ paths:
             application/json:
               schema:
                 type: object
-
-  /organization:
-    post:
-      tags:
-        - organization
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                organization_name:
-                  type: string
-                  example: MyOrganization
-                user_name:
-                  type: string
-                  example: myusername
-      responses:
-        "200":
-          description: Can't get this to work
 
   /diff:
     post:
