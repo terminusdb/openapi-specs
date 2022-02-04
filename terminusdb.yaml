@@ -70,7 +70,7 @@ paths:
                   "@type":
                     type: string
                     example: api:InfoResponse
-                  "api:info":
+                  api:info:
                     type: object
                     properties:
                       authority:
@@ -94,7 +94,7 @@ paths:
                           version:
                             type: string
                             example: 0.19.5
-                  "api:status":
+                  api:status:
                     type: string
                     example: api:success
 
@@ -166,7 +166,7 @@ paths:
                   "@type":
                     type: string
                     example: api:DbCreateResponse
-                  "api:status":
+                  api:status:
                     type: string
                     example: api:success
         "400":
@@ -179,22 +179,22 @@ paths:
                   "@type":
                     type: string
                     example: api:DbCreateErrorResponse
-                  "api:error":
+                  api:error:
                     type: object
                     properties:
                       "@type":
                         type: string
                         example: api:DatabaseAlreadyExists
-                      "api:database_name":
+                      api:database_name:
                         type: string
                         example: MyNewAlreadyExistingDatabase
-                      "api:organization_name":
+                      api:organization_name:
                         type: string
                         example: admin
-                  "api:message":
+                  api:message:
                     type: string
                     example: Database already exists.
-                  "api:status":
+                  api:status:
                     type: string
                     example: api:failure
         "401":
@@ -228,7 +228,7 @@ paths:
                   "@type":
                     type: string
                     example: api:DbDeleteResponse
-                  "api:status":
+                  api:status:
                     type: string
                     example: api:success
         "403":
@@ -243,16 +243,16 @@ paths:
                   "@type":
                     type: string
                     example: api:DbDeleteErrorResponse
-                  "api:error":
+                  api:error:
                     type: object
                     properties:
                       "@type":
                         type: string
                         example: api:UnknownDatabase
-                      "api:database_name":
+                      api:database_name:
                         type: string
                         example: MyNonExistingDatabase
-                      "api:organization_name":
+                      api:organization_name:
                         type: string
                         example: admin
 
@@ -456,7 +456,7 @@ paths:
                     type: string
                     enum:
                       - api:BranchResponse
-                  "api:status":
+                  api:status:
                     type: string
                     enum:
                       - api:success
@@ -477,7 +477,7 @@ paths:
                     type: string
                     enum:
                       - api:BranchResponse
-                  "api:status":
+                  api:status:
                     type: string
                     enum:
                       - api:success
@@ -500,15 +500,15 @@ paths:
                     type: string
                     enum:
                       - api:SquashResponse
-                  "api:commit":
+                  api:commit:
                     type: string
                     example: >
                       admin/test/local/commit/apgatilsa03g4lsa9ra5698wom5wcv7
-                  "api:old_commit":
+                  api:old_commit:
                     type: string
                     example: >
                       admin/test/local/commit/5jndjh9lexe62q9u1q2vofyjemfnmyt
-                  "api:status":
+                  api:status:
                     type: string
                     enum:
                       - api:success
@@ -542,7 +542,7 @@ paths:
                     type: string
                     enum:
                       - api:ResetResponse
-                  "api:status":
+                  api:status:
                     type: string
                     enum:
                       - api:success
@@ -569,7 +569,7 @@ paths:
                     type: string
                     enum:
                       - api:OptimizeResponse
-                  "api:status":
+                  api:status:
                     type: string
                     enum:
                       - api:success
