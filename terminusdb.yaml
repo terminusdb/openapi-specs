@@ -26,6 +26,10 @@ info:
     * Python client: [`terminusdb-client-python`](https://github.com/terminusdb/terminusdb-client-python)
     * JavaScript client: [`terminusdb-client-js`](https://github.com/terminusdb/terminusdb-client-js)
 
+tags:
+  - name: information
+    description: Information about the TerminusDB server
+
 servers:
   - url: http://localhost:6363/api
     description: A local instance of TerminusDB
@@ -41,7 +45,7 @@ paths:
     get:
       summary: Get a list of databases for the authenticated user
       tags:
-        - connection
+        - information
       responses:
         "200":
           description: successful operation
@@ -58,7 +62,7 @@ paths:
     get:
       summary: Get information about the TerminusDB version
       tags:
-        - connection
+        - information
       responses:
         "200":
           description: succesful operation
@@ -102,7 +106,7 @@ paths:
     get:
       summary: Simple status update
       tags:
-        - connection
+        - information
       responses:
         "200":
           description: Succeeded
