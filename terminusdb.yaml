@@ -318,18 +318,19 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                description: Concatenated list of JSON documents
-                example:
-                  {
-                    "@id": "Organization/admin",
-                    "@type": "Organization",
-                    "database": [
-                      "SystemDatabase/system",
-                      "UserDatabase/60c35164e937174bbf4dd814c78153d660edc55b3d799c534c1e2d872a3d2dd6"
-                    ],
-                    "name": "admin"
-                  }
+                type: array
+                items:
+                  type: object
+                  properties:
+                    "@id":
+                      type: string
+                      example: ClassName/instanceName
+                    "@type":
+                      type: string
+                      example: ClassName
+                    fieldName:
+                      type: string
+                      example: fieldValue
     post:
       summary: Insert a new document
       tags:
