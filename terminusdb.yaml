@@ -16,8 +16,15 @@ info:
 
     ### Resources
 
-    For more on how to work with TerminusDB, check out the [rest of the
-    Documentation](https://terminusdb.com/docs/).
+    To learn how to work with TerminusDB, check out the [rest of the
+    documentation](https://terminusdb.com/docs/).
+
+    For our open-source work, check out the following GitHub
+    repositories:
+
+    * Core database: [`terminusdb`](https://github.com/terminusdb/terminusdb)
+    * Python client: [`terminusdb-client-python`](https://github.com/terminusdb/terminusdb-client-python)
+    * JavaScript client: [`terminusdb-client-js`](https://github.com/terminusdb/terminusdb-client-js)
 
 servers:
   - url: http://localhost:6363/api
