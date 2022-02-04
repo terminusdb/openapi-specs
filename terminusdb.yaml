@@ -5,7 +5,7 @@ info:
   x-logo:
     url: https://raw.githubusercontent.com/terminusdb/terminusdb-web-assets/master/images/TerminusDB-Pop-Small.gif
   contact:
-    email: team@terminusdb.com
+    url: https://terminusdb.com/
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
