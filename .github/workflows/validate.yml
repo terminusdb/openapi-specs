@@ -39,6 +39,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - uses: ibiqlik/action-yamllint@v3
+        with:
+          file_or_dir: "*.yaml"
+          strict: true
+
       - uses: char0n/swagger-editor-validate@v1
         with:
           definition-file: terminusdb.yaml
