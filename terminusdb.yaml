@@ -27,8 +27,12 @@ info:
     * JavaScript client: [`terminusdb-client-js`](https://github.com/terminusdb/terminusdb-client-js)
 
 tags:
-  - name: information
-    description: Information about the TerminusDB server
+  - name: Database
+    description: |
+      These endpoints support the management of databases.
+  - name: Information
+    description: |
+      These endpoints provide information about the server.
 
 servers:
   - url: http://localhost:6363/api
@@ -45,7 +49,7 @@ paths:
     get:
       summary: Get a list of databases for the authenticated user
       tags:
-        - information
+        - Information
       responses:
         "200":
           description: successful operation
@@ -62,7 +66,7 @@ paths:
     get:
       summary: Get information about the TerminusDB version
       tags:
-        - information
+        - Information
       responses:
         "200":
           description: succesful operation
@@ -106,7 +110,7 @@ paths:
     get:
       summary: Simple status update
       tags:
-        - information
+        - Information
       responses:
         "200":
           description: Succeeded
@@ -115,7 +119,7 @@ paths:
     post:
       summary: Create a database
       tags:
-        - database
+        - Database
       parameters:
         - $ref: "#/components/parameters/organization"
         - $ref: "#/components/parameters/database"
@@ -206,7 +210,7 @@ paths:
     delete:
       summary: Delete a database
       tags:
-        - database
+        - Database
       parameters:
         - $ref: "#/components/parameters/organization"
         - $ref: "#/components/parameters/database"
