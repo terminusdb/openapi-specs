@@ -149,7 +149,7 @@ paths:
               type: object
               properties:
                 label:
-                  description: Displayed name of the database
+                  description: Database name displayed
                   type: string
                   example: Squid Species
                 comment:
@@ -157,13 +157,13 @@ paths:
                   type: string
                   example: >
                     This database contains information on all known species of
-                    the order TODO.
+                    cephalopods in the superorder Decapodiformes.
                 public:
-                  description: Visible to anonymous users
+                  description: Make it visible to anonymous users
                   type: boolean
                   default: false
                 schema:
-                  description: Schema-checking is enabled
+                  description: Enable schema-checking
                   type: boolean
                   default: true
                 prefixes:
@@ -764,7 +764,7 @@ components:
     organization:
       name: organization
       in: path
-      description: Organization for the database
+      description: Organization identifier
       required: true
       schema:
         type: string
@@ -772,11 +772,11 @@ components:
     database:
       name: database
       in: path
-      description: Database name
+      description: Database identifier
       required: true
       schema:
         type: string
-        example: MyNewDatabase
+        example: my_database
 
   schemas:
     WoqlQuery:
