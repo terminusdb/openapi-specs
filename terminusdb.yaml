@@ -242,7 +242,7 @@ paths:
                 force:
                   type: boolean
                   example: false
-                  description: Force database to be deleted
+                  description: Delete even if the database is in an inconsistent state
       responses:
         "200":
           description: Succesfully deleted DB
@@ -282,13 +282,13 @@ paths:
                         type: string
                         example: admin
 
-  /document/{path}:
+  /document/{resource}:
     get:
       summary: Get a document
       tags:
         - Documents
       parameters:
-        - $ref: "#/components/parameters/document_path"
+        - $ref: "#/components/parameters/document_resource"
         - $ref: "#/components/parameters/graph_type"
         - name: skip
           in: query
@@ -362,7 +362,7 @@ paths:
       tags:
         - Documents
       parameters:
-        - $ref: "#/components/parameters/document_path"
+        - $ref: "#/components/parameters/document_resource"
         - $ref: "#/components/parameters/author"
         - $ref: "#/components/parameters/message"
         - $ref: "#/components/parameters/graph_type"
@@ -386,7 +386,7 @@ paths:
       tags:
         - Documents
       parameters:
-        - $ref: "#/components/parameters/document_path"
+        - $ref: "#/components/parameters/document_resource"
         - $ref: "#/components/parameters/author"
         - $ref: "#/components/parameters/message"
         - $ref: "#/components/parameters/graph_type"
@@ -405,7 +405,7 @@ paths:
       tags:
         - Documents
       parameters:
-        - $ref: "#/components/parameters/document_path"
+        - $ref: "#/components/parameters/document_resource"
         - $ref: "#/components/parameters/author"
         - $ref: "#/components/parameters/message"
         - $ref: "#/components/parameters/graph_type"
@@ -753,14 +753,16 @@ components:
       schema:
         type: string
         example: admin/test/local/branch/foo
-    document_path:
-      name: path
+    document_resource:
+      name: resource
       in: path
-      description: Path for document
+      description: Resource path for document
       required: true
       schema:
         type: string
-        example: admin/foo
+        examples:
+          - description: A database `my_database` in the organization `my_organization`
+            value: my_organization/my_database
     organization:
       name: organization
       in: path
