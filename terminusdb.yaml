@@ -756,13 +756,13 @@ components:
     document_resource:
       name: resource
       in: path
-      description: Resource path for document
+      description: Resource path
       required: true
       schema:
         type: string
-        examples:
-          - description: A database `my_database` in the organization `my_organization`
-            value: my_organization/my_database
+      examples:
+        - description: A database `my_database` in the organization `my_organization`
+          value: my_organization/my_database
     organization:
       name: organization
       in: path
