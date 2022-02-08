@@ -761,9 +761,18 @@ components:
       schema:
         type: string
       examples:
-        resource:
-          description: A database `my_database` in the organization `my_organization`
+        database:
+          summary: A database in an organization
           value: my_organization/my_database
+        meta:
+          summary: Metadata for a database in an organization
+          value: my_organization/my_database/_meta
+        commits:
+          summary: Commit history for a database in an organization
+          value: my_organization/my_database/local/_commits
+        system:
+          summary: System database
+          value: _system
     organization:
       name: organization
       in: path
