@@ -33,12 +33,12 @@ tags:
   - name: Documents
     description: |
       These endpoints support the Document Interface.
-  - name: WOQL
-    description: |
-      These endpoints support the Web Object Query Language (WOQL).
   - name: JSON Diff & Patch
     description: |
       These endpoints support diff and patch operations on JSON.
+  - name: WOQL
+    description: |
+      These endpoints support the Web Object Query Language (WOQL).
   - name: Branch
     description: |
       These endpoints provide branch operations on a database.
