@@ -765,10 +765,10 @@ components:
           summary: A database in an organization
           value: my_organization/my_database
         meta:
-          summary: Metadata for a database in an organization
+          summary: Metadata for a database
           value: my_organization/my_database/_meta
         commits:
-          summary: Commit history for a database in an organization
+          summary: Commit history for a database
           value: my_organization/my_database/local/_commits
         system:
           summary: System database
