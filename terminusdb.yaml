@@ -290,54 +290,14 @@ paths:
       parameters:
         - $ref: "#/components/parameters/document_resource"
         - $ref: "#/components/parameters/graph_type"
-        - name: skip
-          in: query
-          description: Skip a certain amount of documents
-          required: false
-          schema:
-            type: integer
-            default: 0
-        - name: count
-          in: query
-          description: Number of entries to show
-          required: false
-          schema:
-            type: integer
-            example: 3
-        - name: minimized
-          in: query
-          description: Minify the output
-          required: false
-          schema:
-            type: boolean
-            default: true
-        - name: as_list
-          in: query
-          description: Return the JSONs as list instead of concatenated json
-          required: false
-          schema:
-            type: boolean
-            default: false
-        - name: unfold
-          in: query
-          description: Unfold the documents (join other referenced documents)
-          schema:
-            type: boolean
-            default: true
-        - name: id
-          in: query
-          required: false
-          description: Specific document ID to look for
-          schema:
-            type: string
-            example: Person_Robin_1991-02-01
-        - name: type
-          in: query
-          required: false
-          description: Get documents of only a specific type
-          schema:
-            type: string
-            example: Person
+        - $ref: "#/components/parameters/document_id"
+        - $ref: "#/components/parameters/document_type"
+        - $ref: "#/components/parameters/document_skip"
+        - $ref: "#/components/parameters/document_count"
+        - $ref: "#/components/parameters/document_unfold"
+        - $ref: "#/components/parameters/document_minimized"
+        - $ref: "#/components/parameters/document_as_list"
+        - $ref: "#/components/parameters/document_prefixed"
       responses:
         "200":
           description: List of documents
@@ -721,14 +681,14 @@ components:
     graph_type:
       name: graph_type
       in: query
-      description: Type of the graph
+      description: Resource graph (`instance` or `schema`)
       required: false
       schema:
         type: string
-        default: instance
         enum:
           - instance
           - schema
+        default: instance
     author:
       name: author
       in: query
@@ -773,6 +733,70 @@ components:
         system:
           summary: System database
           value: _system
+    document_skip:
+      name: skip
+      in: query
+      description: Skip a certain amount of documents
+      required: false
+      schema:
+        type: integer
+        default: 0
+    document_count:
+      name: count
+      in: query
+      description: Number of entries to show
+      required: false
+      schema:
+        type: integer
+        example: 3
+    document_minimized:
+      name: minimized
+      in: query
+      description: Minify the output
+      required: false
+      schema:
+        type: boolean
+        default: true
+    document_as_list:
+      name: as_list
+      in: query
+      description: Return the JSONs as list instead of concatenated json
+      required: false
+      schema:
+        type: boolean
+        default: false
+    document_unfold:
+      name: unfold
+      in: query
+      description: Unfold the documents (join other referenced documents)
+      schema:
+        type: boolean
+        default: true
+    document_id:
+      name: id
+      in: query
+      required: false
+      description: Specific document ID to look for
+      schema:
+        type: string
+        example: Person_Robin_1991-02-01
+    document_type:
+      name: type
+      in: query
+      required: false
+      description: Get documents of only a specific type
+      schema:
+        type: string
+        example: Person
+    document_prefixed:
+      name: prefixed
+      in: query
+      description: >
+        Use compressed identifiers, instead of full URIs, where possible
+      required: false
+      schema:
+        type: boolean
+        default: true
     organization:
       name: organization
       in: path
