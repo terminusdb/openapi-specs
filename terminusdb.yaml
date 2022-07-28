@@ -340,7 +340,7 @@ paths:
                         example: admin
                   "api:message":
                     type: string
-                    example: Unknown database: admin/MyNonExistingDatabase
+                    example: "Unknown database: admin/MyNonExistingDatabase"
                   "api:status":
                     type: string
                     example: api:not_found
