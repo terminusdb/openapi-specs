@@ -620,6 +620,10 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - comment
+                - label
+                - remote_url
               properties:
                 comment:
                   type: string
@@ -636,8 +640,7 @@ paths:
                 public:
                   type: boolean
                   description: Whether to make the newly cloned database public
-                  required: false
-      response:
+      responses:
         200:
           description: Database cloned succesfully
           content:
