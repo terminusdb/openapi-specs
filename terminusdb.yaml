@@ -547,7 +547,7 @@ paths:
       tags:
         - Frame
       summary: Get the full class frame for a class or all classes for a schema
-      paramters:
+      parameters:
         - $ref: '#/components/parameters/document_path'
         - name: compress_ids
           in: query
@@ -563,6 +563,16 @@ paths:
           schema:
             type: boolean
             default: true
+      responses:
+        200:
+          description: Class Frame has been successfully returned
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                  - type: array
+                description: Class frame for class, or list of class frames
   /woql:
     post:
       tags:
@@ -597,11 +607,11 @@ paths:
       responses:
         200:
           description: Query result
-  /clone/{organization}/{db}:
+  /clone/{organization}/{database}:
     post:
       tags:
         - clone
-      paramters:
+      parameters:
         - $ref: '#/components/parameters/organization'
         - $ref: '#/components/parameters/database'
       requestBody:
