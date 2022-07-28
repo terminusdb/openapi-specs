@@ -97,48 +97,93 @@ paths:
         - database
       summary: List details of all databases available to the authorized user.
       parameters:
-        branches:
-          name: branches
+        - name: branches
           in: query
           description: Return branches or not
           required: false
           schema:
             type: boolean
             default: false
-        verbose:
-          name: verbose
+        - name: verbose
           in: query
           description: Return all available information
           required: false
           schema:
             type: boolean
             default: false
+      responses:
+        200:
+          description: Database listing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Database'
+        404:
+          description: database not found
+          content:
+            application/json:
+              schema:
+                type: object
+
   /db/{organization}/{database}:
     get:
       tags:
         - database
       summary: List details of the database under the given organization.
       parameters:
-        branches:
-          name: branches
+        - $ref: '#/components/parameters/organization'
+        - $ref: '#/components/parameters/database'
+        - name: branches
           in: query
           description: Return branches or not
           required: false
           schema:
             type: boolean
             default: false
-        verbose:
-          name: verbose
+        - name: verbose
           in: query
           description: Return all available information
           required: false
           schema:
             type: boolean
             default: false
+      responses:
+        200:
+          description: Database listing
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Database'
+
+        404:
+          description: Database not found
+          content:
+            application/json:
+              schema:
+                type: object
     head:
       tags:
         - database
       summary: Check that a db exists
+      parameters:
+        - $ref: '#/components/parameters/organization'
+        - $ref: '#/components/parameters/database'
+      responses:
+        200:
+          description: Database exists
+          content:
+            application/json:
+              schema:
+                type: object
+        404:
+          description: Database not found
+          content:
+            application/json:
+              schema:
+                type: object
+
     post:
       tags:
         - database
