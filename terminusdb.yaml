@@ -91,7 +91,99 @@ paths:
       responses:
         200:
           description: Succeeded
+  /db/:
+    get:
+      tags:
+        - database
+      summary: List details of all databases available to the authorized user.
+      parameters:
+        - name: branches
+          in: query
+          description: Return branches or not
+          required: false
+          schema:
+            type: boolean
+            default: false
+        - name: verbose
+          in: query
+          description: Return all available information
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        200:
+          description: Database listing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Database'
+        404:
+          description: database not found
+          content:
+            application/json:
+              schema:
+                type: object
+
   /db/{organization}/{database}:
+    get:
+      tags:
+        - database
+      summary: List details of the database under the given organization.
+      parameters:
+        - $ref: '#/components/parameters/organization'
+        - $ref: '#/components/parameters/database'
+        - name: branches
+          in: query
+          description: Return branches or not
+          required: false
+          schema:
+            type: boolean
+            default: false
+        - name: verbose
+          in: query
+          description: Return all available information
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        200:
+          description: Database listing
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Database'
+
+        404:
+          description: Database not found
+          content:
+            application/json:
+              schema:
+                type: object
+    head:
+      tags:
+        - database
+      summary: Check that a db exists
+      parameters:
+        - $ref: '#/components/parameters/organization'
+        - $ref: '#/components/parameters/database'
+      responses:
+        200:
+          description: Database exists
+          content:
+            application/json:
+              schema:
+                type: object
+        404:
+          description: Database not found
+          content:
+            application/json:
+              schema:
+                type: object
+
     post:
       tags:
         - database
@@ -175,17 +267,13 @@ paths:
       parameters:
         - $ref: '#/components/parameters/organization'
         - $ref: '#/components/parameters/database'
-      requestBody:
-        required: false
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                "force":
-                  type: boolean
-                  example: false
-                  description: Force database to be deleted
+        - name: force
+          in: query
+          description: Force database to be delete (useful for databases in inconsistent states)
+          required: false
+          schema:
+            type: boolean
+            default: false
       responses:
         200:
           description: Succesfully deleted DB
@@ -224,6 +312,81 @@ paths:
                       "api:organization_name":
                         type: string
                         example: admin
+    put:
+      tags:
+        - database
+      summary: Change qualities of a database (label, comment, etc.)
+      parameters:
+        - $ref: '#/components/parameters/organization'
+        - $ref: '#/components/parameters/database'
+      requestBody: # TODO: Missing prefixes
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                comment:
+                  type: string
+                  example: A sample comment for my database
+                label:
+                  type: string
+                  example: Testdatabase
+                public:
+                  type: boolean
+                  example: false
+                  description: Should the database be accessible for all users?
+                schema:
+                  type: boolean
+                  example: true
+                  description: Should the database be initialized with a schema?
+              required:
+                - comment
+                - label
+      responses:
+        200:
+          description: Updated database
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  "@type":
+                    type: string
+                    example: api:DbUpdatedResponse
+                  "api:status":
+                    type: string
+                    example: api:success
+        404:
+          description: Database not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  "@type":
+                    type: string
+                    example: api:DbUpdateErrorResponse
+                  "api:error":
+                    type: object
+                    properties:
+                      "@type":
+                        type: string
+                        example: api:UnknownDatabase
+                      "api:database_name":
+                        type: string
+                        example: MyNonExistingDatabase
+                      "api:organization_name":
+                        type: string
+                        example: admin
+                  "api:message":
+                    type: string
+                    example: "Unknown database: admin/MyNonExistingDatabase"
+                  "api:status":
+                    type: string
+                    example: api:not_found
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
 
   /document/{path}:
     get:
@@ -281,7 +444,13 @@ paths:
           schema:
             type: string
             example: Person
-        # TODO: Prefixed and compress ids
+        - name: compress_ids
+          in: query
+          required: false
+          description: Whether to compress all ids using prefixes
+          schema:
+            type: boolean
+            default: true
 
       responses:
         200:
@@ -306,6 +475,13 @@ paths:
           in: query
           required: false
           description: Fully replace a document
+          schema:
+            type: boolean
+            default: false
+        - name: raw_json
+          in: query
+          required: false
+          description: Whether to interpret the posted document as arbitrary untyped JSON
           schema:
             type: boolean
             default: false
@@ -343,7 +519,7 @@ paths:
         200:
           description: Succesfully deleted document(s)
           # TODO: Need the proper JSON resposne!
-    put: 
+    put:
       tags:
         - document
       summary: Replace a document
@@ -359,9 +535,49 @@ paths:
           schema:
             type: boolean
             default: false
+        - name: raw_json
+          in: query
+          description: Treat incoming document as raw json (not type checked)
+          required: false
+          schema:
+            type: boolean
+            default: false
       responses:
         200:
           description: Succesfully replaced documents
+  /schema:
+    get:
+      tags:
+        - frame
+      summary: Get the full class frame for a class or all classes for a schema
+      parameters:
+        - $ref: '#/components/parameters/document_path'
+        - name: compress_ids
+          in: query
+          description: Compress the URLs returned using prefixes
+          required: false
+          schema:
+            type: boolean
+            default: true
+        - name: expand_abstract
+          in: query
+          description: Whether to expand abstract classes into lists of concrete classes in frame options
+          required: false
+          schema:
+            type: boolean
+            default: true
+      responses:
+        200:
+          description: Class Frame, or object of all class frames has been successfully returned
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                OneClass:
+                  value: { "@documentation": { "@comment":"A normal user database.","@properties": { "comment":"A comment associated with the database.", "creation_date":"The time of creation of the database.", "label":"The label name of the database.", "state":"The system transaction state of the database."} }, "@key": {"@type":"Random"}, "@type":"Class", "comment":"xsd:string", "creation_date":"xsd:dateTime","label":"xsd:string","name":"xsd:string","state": {"@id":"DatabaseState","@type":"Enum","@values": ["creating", "deleting", "finalized" ]}}
+                AllClasses:
+                  value: { "@context": { "@base":"terminusdb:///data/", "@schema":"terminusdb:///schema#", "@type":"Context" }, "Person": {"@type":"Class", "name":"xsd:string"}, "Room": {"@type":"Class", "room_number":"xsd:integer"} }
   /woql:
     post:
       tags:
@@ -381,7 +597,7 @@ paths:
         - WOQL
       parameters:
         - name: path
-          description: WOQL Path
+          description: Database Path
           in: path
           required: true
           schema:
@@ -396,6 +612,193 @@ paths:
       responses:
         200:
           description: Query result
+  /clone/{organization}/{database}:
+    post:
+      tags:
+        - collaboration
+      parameters:
+        - $ref: '#/components/parameters/organization'
+        - $ref: '#/components/parameters/database'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - comment
+                - label
+                - remote_url
+              properties:
+                comment:
+                  type: string
+                  example: This is a comment on my cloned database
+                  description: The comment to use in the cloned database
+                label:
+                  type: string
+                  example: This is how I label my cloned database
+                  description: The label to use for the cloned database
+                remote_url:
+                  type: string
+                  example: 'http://cloud.terminusdb.com/TerminatorsX/TerminatorsX/nuclear'
+                  description: The URL of the database to clone
+                public:
+                  type: boolean
+                  description: Whether to make the newly cloned database public
+      responses:
+        200:
+          description: Database cloned succesfully
+          content:
+            application/json:
+              schema:
+                type: object
+  /fetch/{path}:
+    post:
+      tags:
+        - collaboration
+      summary: Fetch the remote repository for the given path (default is origin)
+      parameters:
+        - $ref: '#/components/parameters/branch_path'
+        - name: AUTHORIZATION_REMOTE
+          in: header
+          required: true
+          description: The authorization to use on the remote
+          schema:
+            type: string
+            example: Basic S2FybEthdXRza3k6cGFzc3dvcmRfZGVzdGluYXRpb24=
+      responses:
+        200:
+          description: "Successful fetch"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  "@type:":
+                    type: string
+                    enum:
+                      - "api:FetchRequest"
+                  "api:status":
+                    type: string
+                    enum:
+                      - "api:success"
+                  "api:head_has_changed":
+                    type: boolean
+                  "api:head":
+                    type: string
+                    example: 194822f8942286517e151817d38acca4c9ac7d01
+  /push/{path}:
+    post:
+      summary: Push the branch to the remote
+      tags:
+        - collaboration
+      parameters:
+        - $ref: '#/components/parameters/branch_path'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - remote
+                - remote_branch
+              properties:
+                remote:
+                  type: string
+                  example: origin
+                  description: The name of the remote to push to
+                remote_branch:
+                  type: string
+                  example: main
+                  description: The name of the branch on the remote to push
+                push_prefixes:
+                  type: boolean
+                  default: false
+                  description: Should the prefixes also be pushed to the remote?
+      responses:
+        200:
+          description: "Push Response"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  "@type":
+                    type: string
+                    enum:
+                      - "api:PushResponse"
+                  "api:repo_head_updated":
+                    type: boolean
+                  "api:repo_head":
+                    type: string
+                    example: 194822f8942286517e151817d38acca4c9ac7d01
+                  "api:status":
+                    type: string
+                    enum:
+                      - "api:success"
+        400:
+          description: "Push Response"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  "@type":
+                    type: string
+                    enum:
+                      - "api:PushErrorResponse"
+                  "api:error":
+                    type: object
+                  "api:message":
+                    type: string
+                    example: "Unknown remote repository: porridgen"
+                  "api:status":
+                    type: string
+                    enum:
+                      - "api:failure"
+
+  /pull/{path}:
+    post:
+      summary: Pull to a branch from a remote
+      tags:
+        - collaboration
+      parameters:
+        - $ref: '#/components/parameters/branch_path'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - remote
+                - remote_branch
+              properties:
+                remote:
+                  type: string
+                  example: origin
+                  description: The name of the remote to push to
+                remote_branch:
+                  type: string
+                  example: main
+                  description: The name of the branch on the remote to push
+      responses:
+        200:
+          description: "Pull Response"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  "@type":
+                    type: string
+                    enum:
+                      - "api:PullResponse"
+                  "api:status":
+                    type: string
+                    enum:
+                      - "api:success"
   /branch/{path}:
     post:
       tags:
@@ -508,9 +911,11 @@ paths:
                       - api:success
   /optimize/{path}:
     post:
+      tags:
+        - database
       parameters:
         - name: path
-          description: WOQL Path
+          description: Database Path
           in: path
           required: true
           schema:
@@ -532,16 +937,13 @@ paths:
                     type: string
                     enum:
                       - api:success
-      tags:
-        - optimize
-
   /prefixes/{path}:
     get:
       tags:
         - prefixes
       parameters:
         - name: path
-          description: WOQL Path
+          description: Database Path
           in: path
           required: true
           schema:
@@ -554,33 +956,10 @@ paths:
             application/json:
               schema:
                 type: object
-
-
-  /organization: # TODO: this one crashes!
-    post:
-      tags:
-        - organization
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                "organization_name":
-                  type: string
-                  example: MyOrganization
-                "user_name":
-                  type: string
-                  example: myusername
-      responses:
-        200:
-          description: "Can't get this to work"
-
   /diff:
     post:
       tags:
-        - diff
+        - change management
       requestBody:
         required: true
         content:
@@ -612,7 +991,7 @@ paths:
   /patch:
     post:
       tags:
-        - patch
+        - change management
       requestBody:
         required: true
         content:
