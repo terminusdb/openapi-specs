@@ -692,7 +692,7 @@ paths:
       summary: Push the branch to the remote
       tags:
         - collaboration
-      paramters:
+      parameters:
         - $ref: '#/components/parameters/branch_path'
       requestBody:
         required: true
@@ -716,6 +716,48 @@ paths:
                   type: boolean
                   default: false
                   description: Should the prefixes also be pushed to the remote?
+      responses:
+        200:
+          description: "Push Response"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  "@type":
+                    type: string
+                    enum:
+                      - "api:PushResponse"
+                  "api:repo_head_updated":
+                    type: boolean
+                  "api:repo_head":
+                    type: string
+                    example: 194822f8942286517e151817d38acca4c9ac7d01
+                  "api:status":
+                    type: string
+                    enum:
+                      - "api:success"
+        400:
+          description: "Push Response"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  "@type":
+                    type: string
+                    enum:
+                      - "api:PushErrorResponse"
+                  "api:error":
+                    type: object
+                  "api:message":
+                    type: string
+                    example: "Unknown remote repository: porridgen"
+                  "api:status":
+                    type: string
+                    enum:
+                      - "api:failure"
+
   /pull/{path}:
     post:
       summary: Pull to a branch from a remote
@@ -741,9 +783,22 @@ paths:
                   type: string
                   example: main
                   description: The name of the branch on the remote to push
-  /remote/{path}:
-    post:
-      
+      responses:
+        200:
+          description: "Pull Response"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  "@type":
+                    type: string
+                    enum:
+                      - "api:PullResponse"
+                  "api:status":
+                    type: string
+                    enum:
+                      - "api:success"
   /branch/{path}:
     post:
       tags:
@@ -882,9 +937,6 @@ paths:
                     type: string
                     enum:
                       - api:success
-      tags:
-        - optimize
-
   /prefixes/{path}:
     get:
       tags:
