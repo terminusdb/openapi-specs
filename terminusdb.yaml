@@ -267,17 +267,13 @@ paths:
       parameters:
         - $ref: '#/components/parameters/organization'
         - $ref: '#/components/parameters/database'
-      requestBody:
-        required: false
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                "force":
-                  type: boolean
-                  example: false
-                  description: Force database to be deleted
+        - name: force
+          in: query
+          description: Force database to be delete (useful for databases in inconsistent states)
+          required: false
+          schema:
+            type: boolean
+            default: false
       responses:
         200:
           description: Succesfully deleted DB
@@ -565,14 +561,16 @@ paths:
             default: true
       responses:
         200:
-          description: Class Frame has been successfully returned
+          description: Class Frame, or object of all class frames has been successfully returned
           content:
             application/json:
               schema:
-                oneOf:
-                  - type: object
-                  - type: array
-                description: Class frame for class, or list of class frames
+                type: object
+              examples:
+                OneClass:
+                  value: { "@documentation": { "@comment":"A normal user database.","@properties": { "comment":"A comment associated with the database.", "creation_date":"The time of creation of the database.", "label":"The label name of the database.", "state":"The system transaction state of the database."} }, "@key": {"@type":"Random"}, "@type":"Class", "comment":"xsd:string", "creation_date":"xsd:dateTime","label":"xsd:string","name":"xsd:string","state": {"@id":"DatabaseState","@type":"Enum","@values": ["creating", "deleting", "finalized" ]}}
+                AllClasses:
+                  value: { "@context": { "@base":"terminusdb:///data/", "@schema":"terminusdb:///schema#", "@type":"Context" }, "Person": {"@type":"Class", "name":"xsd:string"}, "Room": {"@type":"Class", "room_number":"xsd:integer"} }
   /woql:
     post:
       tags:
