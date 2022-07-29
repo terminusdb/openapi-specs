@@ -535,13 +535,20 @@ paths:
           schema:
             type: boolean
             default: false
+        - name: raw_json
+          in: query
+          description: Treat incoming document as raw json (not type checked)
+          required: false
+          schema:
+            type: boolean
+            default: false
       responses:
         200:
           description: Succesfully replaced documents
   /schema:
     get:
       tags:
-        - Frame
+        - frame
       summary: Get the full class frame for a class or all classes for a schema
       parameters:
         - $ref: '#/components/parameters/document_path'
@@ -590,7 +597,7 @@ paths:
         - WOQL
       parameters:
         - name: path
-          description: WOQL Path
+          description: Database Path
           in: path
           required: true
           schema:
@@ -608,7 +615,7 @@ paths:
   /clone/{organization}/{database}:
     post:
       tags:
-        - clone
+        - collaboration
       parameters:
         - $ref: '#/components/parameters/organization'
         - $ref: '#/components/parameters/database'
@@ -645,6 +652,98 @@ paths:
             application/json:
               schema:
                 type: object
+  /fetch/{path}:
+    post:
+      tags:
+        - collaboration
+      summary: Fetch the remote repository for the given path (default is origin)
+      parameters:
+        - $ref: '#/components/parameters/branch_path'
+        - name: AUTHORIZATION_REMOTE
+          in: header
+          required: true
+          description: The authorization to use on the remote
+          schema:
+            type: string
+            example: Basic S2FybEthdXRza3k6cGFzc3dvcmRfZGVzdGluYXRpb24=
+      responses:
+        200:
+          description: "Successful fetch"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  "@type:":
+                    type: string
+                    enum:
+                      - "api:FetchRequest"
+                  "api:status":
+                    type: string
+                    enum:
+                      - "api:success"
+                  "api:head_has_changed":
+                    type: boolean
+                  "api:head":
+                    type: string
+                    example: 194822f8942286517e151817d38acca4c9ac7d01
+  /push/{path}:
+    post:
+      summary: Push the branch to the remote
+      tags:
+        - collaboration
+      paramters:
+        - $ref: '#/components/parameters/branch_path'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - remote
+                - remote_branch
+              properties:
+                remote:
+                  type: string
+                  example: origin
+                  description: The name of the remote to push to
+                remote_branch:
+                  type: string
+                  example: main
+                  description: The name of the branch on the remote to push
+                push_prefixes:
+                  type: boolean
+                  default: false
+                  description: Should the prefixes also be pushed to the remote?
+  /pull/{path}:
+    post:
+      summary: Pull to a branch from a remote
+      tags:
+        - collaboration
+      parameters:
+        - $ref: '#/components/parameters/branch_path'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - remote
+                - remote_branch
+              properties:
+                remote:
+                  type: string
+                  example: origin
+                  description: The name of the remote to push to
+                remote_branch:
+                  type: string
+                  example: main
+                  description: The name of the branch on the remote to push
+  /remote/{path}:
+    post:
+      
   /branch/{path}:
     post:
       tags:
@@ -757,9 +856,11 @@ paths:
                       - api:success
   /optimize/{path}:
     post:
+      tags:
+        - database
       parameters:
         - name: path
-          description: WOQL Path
+          description: Database Path
           in: path
           required: true
           schema:
@@ -790,7 +891,7 @@ paths:
         - prefixes
       parameters:
         - name: path
-          description: WOQL Path
+          description: Database Path
           in: path
           required: true
           schema:
@@ -803,33 +904,10 @@ paths:
             application/json:
               schema:
                 type: object
-
-
-  /organization: # TODO: this one crashes!
-    post:
-      tags:
-        - organization
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                "organization_name":
-                  type: string
-                  example: MyOrganization
-                "user_name":
-                  type: string
-                  example: myusername
-      responses:
-        200:
-          description: "Can't get this to work"
-
   /diff:
     post:
       tags:
-        - diff
+        - change management
       requestBody:
         required: true
         content:
@@ -861,7 +939,7 @@ paths:
   /patch:
     post:
       tags:
-        - patch
+        - change management
       requestBody:
         required: true
         content:
